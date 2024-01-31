@@ -4,6 +4,9 @@ import com.SalerProjekt.dto.SignUpRequest;
 import com.SalerProjekt.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import com.SalerProjekt.services.auth.AuthService;
+import com.SalerProjekt.repository.UserRepository;
+import com.SalerProjekt.entity.User;
+import com.SalerProjekt.enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatus;
@@ -11,18 +14,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+//@CrossOrigin
 @RequestMapping(path = "/api/auth")
 @RequiredArgsConstructor
-public abstract class AuthController {
-    private final AuthService authService;
-
-    /*
+public class AuthController {
     @Autowired
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
-    */
-    @PostMapping(value ="/signup")
+    private AuthService authService;
+
+    @PostMapping(path ="/sign-up")
     public ResponseEntity<?> signUpCustomer(@RequestBody SignUpRequest signUpRequest) {
         if(authService.hasCustomerWithMail(signUpRequest.getEmail())) {
             return new ResponseEntity<>("Customer with Email already exists", HttpStatus.NOT_ACCEPTABLE);
@@ -33,8 +32,8 @@ public abstract class AuthController {
         }
         return new ResponseEntity<>(createdCustomerDto, HttpStatus.CREATED);
     }
-    @GetMapping(value = "/test")
-    public ResponseEntity<?> test() {
+    @GetMapping(path = "/test")
+    public ResponseEntity<String> test() {
         return new ResponseEntity<>("Test OK", HttpStatus.OK);
     }
 

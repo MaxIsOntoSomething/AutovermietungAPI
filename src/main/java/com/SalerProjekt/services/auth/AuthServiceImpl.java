@@ -7,7 +7,7 @@ import com.SalerProjekt.dto.UserDto;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import com.SalerProjekt.repository.UserRepository;
-
+import com.SalerProjekt.controller.AuthController;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService{
