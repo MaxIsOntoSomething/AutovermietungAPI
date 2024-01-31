@@ -4,6 +4,7 @@ import com.SalerProjekt.entity.User;
 import com.SalerProjekt.enums.UserRole;
 import com.SalerProjekt.dto.SignUpRequest;
 import com.SalerProjekt.dto.UserDto;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import com.SalerProjekt.repository.UserRepository;
@@ -18,7 +19,7 @@ public class AuthServiceImpl implements AuthService{
         User user = new User();
         user.setName(signUpRequest.getName());
         user.setEmail(signUpRequest.getEmail());
-        user.setPassword(signUpRequest.getPassword());
+        user.setPassword(new BCryptPasswordEncoder().encode(signUpRequest.getPassword()));
         user.setRole(UserRole.CUSTOMER);
         User createdUser = userRepository.save(user);
         UserDto userDto = new UserDto();
