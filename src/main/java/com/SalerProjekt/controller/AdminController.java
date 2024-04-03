@@ -1,6 +1,8 @@
 package com.SalerProjekt.controller;
 
+import com.SalerProjekt.dto.BookACarDto;
 import com.SalerProjekt.dto.CarDto;
+import com.SalerProjekt.dto.SearchCarDto;
 import com.SalerProjekt.services.admin.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -57,5 +60,25 @@ public class AdminController {
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+
+    @GetMapping("/car/bookings")
+    public ResponseEntity<List<BookACarDto>> getBookings(){
+        return ResponseEntity.ok(adminService.getBookings());
+    }
+
+    @GetMapping("/car/booking/{bookingId}/{status}")
+    public ResponseEntity<?> changeBookingStatus(@PathVariable Long bookingId, @PathVariable String status){
+        boolean success = adminService.changeBookingsStatus(bookingId, status);
+        if (success){
+            return ResponseEntity.ok(null);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/car/search")
+    public ResponseEntity<?> searchCar(SearchCarDto searchCarDto){
+        return ResponseEntity.ok(adminService.searchCar(searchCarDto));
     }
 }
