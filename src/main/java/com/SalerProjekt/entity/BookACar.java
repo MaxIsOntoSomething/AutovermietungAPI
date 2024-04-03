@@ -1,5 +1,6 @@
 package com.SalerProjekt.entity;
 
+import com.SalerProjekt.dto.BookACarDto;
 import com.SalerProjekt.enums.BookCarStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -39,5 +40,18 @@ public class BookACar {
     @JsonIgnore
     private Car car;
 
-
+    public BookACarDto getBookACarDto() {
+        BookACarDto bookACarDto = new BookACarDto();
+        bookACarDto.setId(id);
+        bookACarDto.setFromDate(fromDate);
+        bookACarDto.setToDate(toDate);
+        bookACarDto.setDays(days);
+        bookACarDto.setPrice(price);
+        bookACarDto.setBookCarStatus(bookCarStatus);
+        bookACarDto.setCarId(car.getId());
+        bookACarDto.setUserId(user.getId());
+        bookACarDto.setUserName(user.getName());
+        bookACarDto.setEmail(user.getEmail());
+        return bookACarDto;
+    }
 }
