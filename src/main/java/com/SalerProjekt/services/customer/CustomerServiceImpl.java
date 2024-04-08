@@ -35,7 +35,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public boolean bookACar(BookACarDto bookACarDto, Long carId) {
+    public boolean bookACar(Long carId, BookACarDto bookACarDto) {
+        if (bookACarDto.getFromDate() == null || bookACarDto.getToDate() == null || bookACarDto.getUserId() == null) {
+            // One or more required fields are null, return false
+            return false;
+        }
         Optional<Car> optionalCar = carRepository.findById(carId);
         Optional<User> optionalUser = userRepository.findById(bookACarDto.getUserId());
         if (optionalCar.isPresent() && optionalUser.isPresent()){
@@ -43,9 +47,11 @@ public class CustomerServiceImpl implements CustomerService {
             BookACar bookACar = new BookACar();
             bookACar.setCar(existingCar);
             bookACar.setUser(optionalUser.get());
+            bookACar.setFromDate(bookACarDto.getFromDate());
+            bookACar.setToDate(bookACarDto.getToDate());
             bookACar.setBookCarStatus(BookCarStatus.PENDING);
-            long diffInMilliSeconds = bookACarDto.getToDate().getTime() - bookACarDto.getFromDate().getTime();
-            long days = TimeUnit.MICROSECONDS.toDays(diffInMilliSeconds);
+            long diffInMillies = Math.abs(bookACarDto.getToDate().getTime() - bookACarDto.getFromDate().getTime());
+            long days = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
             bookACar.setDays(days);
             bookACar.setPrice(existingCar.getPrice() * days);
             bookACarRepository.save(bookACar);

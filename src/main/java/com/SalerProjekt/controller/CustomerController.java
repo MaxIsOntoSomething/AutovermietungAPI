@@ -26,8 +26,8 @@ public class CustomerController {
     }
 
     @PostMapping("/car/book/{carId}")
-    public ResponseEntity<Void> bookACar(@RequestBody BookACarDto bookACarDto, @PathVariable Long carId){
-        boolean success = customerService.bookACar(bookACarDto, carId);
+    public ResponseEntity<Void> bookACar(@PathVariable Long carId, @RequestBody BookACarDto bookACarDto){
+        boolean success = customerService.bookACar(carId, bookACarDto);
         if (success){
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
