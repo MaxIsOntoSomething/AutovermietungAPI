@@ -14,7 +14,6 @@ import com.SalerProjekt.controller.AuthController;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService{
     private final UserRepository userRepository;
-
     @PostConstruct
     public void createAdminAccount(){
         User adminAccount = userRepository.findUserByRole(UserRole.ADMIN);
@@ -28,7 +27,6 @@ public class AuthServiceImpl implements AuthService{
             System.out.println("Created Admin Account");
         }
     }
-
     @Override
     public UserDto createCustomer(SignUpRequest signUpRequest) {
         User user = new User();
@@ -41,12 +39,10 @@ public class AuthServiceImpl implements AuthService{
         userDto.setId(createdUser.getId());
         return userDto;
     }
-
     @Override
     public boolean hasCustomerWithMail(String email) {
         return userRepository.findFirstByEmail(email).isPresent();
     }
-
 }
 
 

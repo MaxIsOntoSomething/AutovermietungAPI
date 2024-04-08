@@ -25,9 +25,9 @@ public class CustomerController {
         return ResponseEntity.ok(carDtoList);
     }
 
-    @PostMapping("/car/book")
-    public ResponseEntity<Void> bookACar(@RequestBody BookACarDto bookACarDto){
-        boolean success = customerService.bookACar(bookACarDto);
+    @PostMapping("/car/book/{carId}")
+    public ResponseEntity<Void> bookACar(@RequestBody BookACarDto bookACarDto, @PathVariable Long carId){
+        boolean success = customerService.bookACar(bookACarDto, carId);
         if (success){
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
@@ -44,7 +44,7 @@ public class CustomerController {
         return ResponseEntity.ok(carDto);
     }
 
-    @GetMapping("/car/bookings/{userId}")
+    @GetMapping("/car/booked/{userId}")
     public ResponseEntity<List<BookACarDto>> getBookingsByUserId(@PathVariable Long userId){
         return ResponseEntity.ok(customerService.getBookingsByUserId(userId));
     }

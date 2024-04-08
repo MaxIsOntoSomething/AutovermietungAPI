@@ -38,21 +38,29 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return !locked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
+    }
+
+    @Getter
+    @Column(name = "locked", nullable = false)
+    private boolean locked = false;
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 }

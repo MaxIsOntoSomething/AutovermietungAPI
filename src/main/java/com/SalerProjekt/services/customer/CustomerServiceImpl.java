@@ -11,6 +11,7 @@ import com.SalerProjekt.enums.BookCarStatus;
 import com.SalerProjekt.repository.BookACarRepository;
 import com.SalerProjekt.repository.CarRepository;
 import com.SalerProjekt.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -34,8 +35,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public boolean bookACar(BookACarDto bookACarDto) {
-        Optional<Car> optionalCar = carRepository.findById(bookACarDto.getCarId());
+    public boolean bookACar(BookACarDto bookACarDto, Long carId) {
+        Optional<Car> optionalCar = carRepository.findById(carId);
         Optional<User> optionalUser = userRepository.findById(bookACarDto.getUserId());
         if (optionalCar.isPresent() && optionalUser.isPresent()){
             Car existingCar = optionalCar.get();
@@ -47,7 +48,6 @@ public class CustomerServiceImpl implements CustomerService {
             long days = TimeUnit.MICROSECONDS.toDays(diffInMilliSeconds);
             bookACar.setDays(days);
             bookACar.setPrice(existingCar.getPrice() * days);
-
             bookACarRepository.save(bookACar);
             return true;
         }else {
@@ -62,6 +62,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public List<BookACarDto> getBookingsByUserId(Long userId) {
         return bookACarRepository.findAllByUserId(userId).stream().map(BookACar::getBookACarDto).collect(Collectors.toList());
     }

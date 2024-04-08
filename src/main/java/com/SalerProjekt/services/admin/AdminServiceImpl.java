@@ -40,7 +40,9 @@ public class AdminServiceImpl implements AdminService {
             car.setType(carDto.getType());
             car.setDescription(carDto.getDescription());
             car.setTransmission(carDto.getTransmission());
-            car.setImage(carDto.getImage().getBytes());
+            if (carDto.getImage() != null) {
+                car.setImage(carDto.getImage().getBytes());
+            }
             carRepository.save(car);
             return true;
         } catch (Exception e){

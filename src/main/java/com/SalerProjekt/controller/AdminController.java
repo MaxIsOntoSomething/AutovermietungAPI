@@ -4,6 +4,7 @@ import com.SalerProjekt.dto.BookACarDto;
 import com.SalerProjekt.dto.CarDto;
 import com.SalerProjekt.dto.SearchCarDto;
 import com.SalerProjekt.services.admin.AdminService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +64,7 @@ public class AdminController {
     }
 
     @GetMapping("/car/bookings")
+    @Transactional
     public ResponseEntity<List<BookACarDto>> getBookings(){
         return ResponseEntity.ok(adminService.getBookings());
     }

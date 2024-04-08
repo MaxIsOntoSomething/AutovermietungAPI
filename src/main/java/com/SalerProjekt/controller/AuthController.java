@@ -39,16 +39,21 @@ public class AuthController {
     //@Autowired
     private final UserRepository userRepository;
 
-    @PostMapping(path = "/sign-up")
+    @PostMapping(path = "/signup")
     public ResponseEntity<?> signUpCustomer(@RequestBody SignUpRequest signUpRequest) {
-        if (authService.hasCustomerWithMail(signUpRequest.getEmail())) {
-            return new ResponseEntity<>("Customer with Email already exists", HttpStatus.NOT_ACCEPTABLE);
+        try {
+            if (authService.hasCustomerWithMail(signUpRequest.getEmail())) {
+                return new ResponseEntity<>("Customer with Email already exists", HttpStatus.NOT_ACCEPTABLE);
+            }
+            UserDto createdCustomerDto = authService.createCustomer(signUpRequest);
+            if (createdCustomerDto == null) {
+                return new ResponseEntity<>("Customer not created", HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(createdCustomerDto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            System.out.println("Exception occurred during signup: " + e);
+            return new ResponseEntity<>("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        UserDto createdCustomerDto = authService.createCustomer(signUpRequest);
-        if (createdCustomerDto == null) {
-            return new ResponseEntity<>("Customer not created", HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(createdCustomerDto, HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/test")
@@ -57,25 +62,25 @@ public class AuthController {
     }
 
     @PostMapping(path = "/login")
-    public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws
-            BadCredentialsException, DisabledException, UsernameNotFoundException{
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     authenticationRequest.getEmail(),
                     authenticationRequest.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("Incorrect username or password", e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
         }
         final UserDetails userDetails = userService.userDetailsService().loadUserByUsername(authenticationRequest.getEmail());
         Optional<User> optionalUser = userRepository.findFirstByEmail(authenticationRequest.getEmail());
+        if(optionalUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
         final String jwt = jwtUtil.generateToken(userDetails);
         AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-        if(optionalUser.isPresent()) {
-            authenticationResponse.setJwt(jwt);
-            authenticationResponse.setUserId(optionalUser.get().getId());
-            authenticationResponse.setUserRole(optionalUser.get().getRole());
-        }
-        return authenticationResponse;
+        authenticationResponse.setJwt(jwt);
+        authenticationResponse.setUserId(optionalUser.get().getId());
+        authenticationResponse.setUserRole(optionalUser.get().getRole());
+        return ResponseEntity.ok(authenticationResponse);
     }
 
 }
