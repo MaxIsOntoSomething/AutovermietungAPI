@@ -113,16 +113,24 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public CarDtoListDto searchCar(SearchCarDto searchCarDto) {
         Car car = new Car();
-        car.setBrand(searchCarDto.getBrand());
-        car.setType(searchCarDto.getType());
-        car.setTransmission(searchCarDto.getTransmission());
-        car.setColor(searchCarDto.getColor());
+        if (searchCarDto.getBrand() != null) {
+            car.setBrand(searchCarDto.getBrand());
+        }
+        if (searchCarDto.getType() != null) {
+            car.setType(searchCarDto.getType());
+        }
+        if (searchCarDto.getTransmission() != null) {
+            car.setTransmission(searchCarDto.getTransmission());
+        }
+        if (searchCarDto.getColor() != null) {
+            car.setColor(searchCarDto.getColor());
+        }
         ExampleMatcher exampleMatcher =
                 ExampleMatcher.matchingAll()
-                        .withMatcher("brand", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                        .withMatcher("type", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                        .withMatcher("transmission", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                        .withMatcher("color", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+                        .withMatcher("brand", ExampleMatcher.GenericPropertyMatchers.exact().ignoreCase())
+                        .withMatcher("type", ExampleMatcher.GenericPropertyMatchers.exact())
+                        .withMatcher("transmission", ExampleMatcher.GenericPropertyMatchers.exact().ignoreCase())
+                        .withMatcher("color", ExampleMatcher.GenericPropertyMatchers.exact().ignoreCase());
         Example<Car> carExample = Example.of(car, exampleMatcher);
         List<Car> carList = carRepository.findAll(carExample);
         CarDtoListDto carDtoListDto = new CarDtoListDto();
