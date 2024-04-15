@@ -39,6 +39,7 @@ public class AuthController {
     //@Autowired
     private final UserRepository userRepository;
 
+    // Register API
     @PostMapping(path = "/signup")
     public ResponseEntity<?> signUpCustomer(@RequestBody SignUpRequest signUpRequest) {
         try {
@@ -55,12 +56,13 @@ public class AuthController {
             return new ResponseEntity<>("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    // Test
     @GetMapping(path = "/test")
     public ResponseEntity<String> test() {
         return new ResponseEntity<>("Test OK", HttpStatus.OK);
     }
 
+    // Login API
     @PostMapping(path = "/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
         try {

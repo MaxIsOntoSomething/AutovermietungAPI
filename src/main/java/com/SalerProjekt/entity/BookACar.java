@@ -28,6 +28,8 @@ public class BookACar {
 
     private BookCarStatus bookCarStatus;
 
+    // Fremdschlüssel
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -40,6 +42,7 @@ public class BookACar {
     @JsonIgnore
     private Car car;
 
+    // Data Transfer Object initialisierung
     public BookACarDto getBookACarDto() {
         BookACarDto bookACarDto = new BookACarDto();
         bookACarDto.setId(id);

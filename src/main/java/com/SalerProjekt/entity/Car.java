@@ -34,6 +34,7 @@ public class Car {
     @Column(columnDefinition = "longblob")
     private byte[] image;
 
+    // Data Transfer Object initialisierung
     public CarDto getCarDto() {
         CarDto carDto = new CarDto();
         carDto.setId(id);

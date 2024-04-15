@@ -19,12 +19,15 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
+
+    // Alle Autos auflisten
     @GetMapping("/cars")
     public ResponseEntity<List<CarDto>> getAllCars(){
         List<CarDto> carDtoList = customerService.getAllCars();
         return ResponseEntity.ok(carDtoList);
     }
 
+    // Auto buchen
     @PostMapping("/car/book/{carId}")
     public ResponseEntity<Void> bookACar(@PathVariable Long carId, @RequestBody BookACarDto bookACarDto){
         boolean success = customerService.bookACar(carId, bookACarDto);
@@ -35,6 +38,7 @@ public class CustomerController {
         }
     }
 
+    // Auto nach ID suchen
     @GetMapping("/car/{carId}")
     public ResponseEntity<CarDto> getCarById(@PathVariable Long carId){
         CarDto carDto = customerService.getCarById(carId);
@@ -44,11 +48,13 @@ public class CustomerController {
         return ResponseEntity.ok(carDto);
     }
 
+    // Alle Buchungen auflisten
     @GetMapping("/car/booked/{userId}")
     public ResponseEntity<List<BookACarDto>> getBookingsByUserId(@PathVariable Long userId){
         return ResponseEntity.ok(customerService.getBookingsByUserId(userId));
     }
 
+    // Autos suchen
     @PostMapping("/car/search")
     public ResponseEntity<?> searchCar(SearchCarDto searchCarDto){
         return ResponseEntity.ok(customerService.searchCar(searchCarDto));

@@ -21,6 +21,7 @@ public class AdminController {
 
     private final AdminService adminService;
 
+    // Auto hinzufügen für Admins
     @PostMapping("/car")
     public ResponseEntity<?> postCar(CarDto carDto) throws IOException {
         boolean success = adminService.postCar(carDto);
@@ -31,17 +32,20 @@ public class AdminController {
         }
     }
 
+    // Alle Autos auflisten
     @GetMapping("/cars")
     public ResponseEntity<?> getAllCars(){
         return ResponseEntity.ok(adminService.getAllCars());
     }
 
+    // Auto löschen
     @DeleteMapping("/car/{id}")
     public ResponseEntity<?> deleteCar(@PathVariable Long id){
         adminService.deleteCar(id);
         return ResponseEntity.ok(null);
     }
 
+    // Auto nach ID suchen
     @GetMapping("/car/{id}")
     public ResponseEntity<CarDto> getCarById(@PathVariable Long id){
         CarDto carDto = adminService.getCarById(id);
